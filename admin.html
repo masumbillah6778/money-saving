@@ -1,0 +1,293 @@
+<!doctype html><html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Money-Saving Apps</title>
+<link rel="stylesheet" href="css/admin.css"></head>
+<body>
+  <button id="menuBtn" class="menu-btn hidden" onclick="toggleSidebar()" aria-label="মেনু">☰</button>
+  <div id="overlay" class="overlay" onclick="closeSidebar()"></div>
+  <aside id="sidebar" class="sidebar">
+  <h3>☰ মেনু</h3>
+  <div class="side-user">Money-Saving Apps</div>
+
+  <button id="sideDash" class="side-link active" onclick="showSection('dash')">
+    🏠 ড্যাশবোর্ড
+  </button>
+
+  <button id="sideForm" class="side-link" onclick="showSection('depositForm')">
+    ➕ টাকা জমার ফরম
+  </button>
+
+  <button id="sideList" class="side-link" onclick="showSection('depositList')">
+    📋 টাকা জমার তালিকা
+  </button>
+  <button id="sideAdmin" class="side-link hidden" onclick="showSection('adminPanel')">
+    ⚙️ এডমিন প্যানেল
+  </button>
+
+
+  <div class="sidebar-spacer"></div>
+  <div class="sidebar-divider"></div>
+
+  
+  <button id="adminLoginBtn" class="side-link" onclick="adminLogin()">
+    🔐 Admin Login
+  </button>
+<button class="side-link side-logout" onclick="logout()">
+    🚪 লগআউট
+  </button>
+</aside>
+
+<header class="top">
+  <h1>💰 Money-Saving Apps</h1>
+  <div>User Panel — Firebase Online</div>
+</header>
+
+<section id="login" class="card">
+  <h2>🔐 Google Login</h2>
+  <p class="muted">Gmail দিয়ে Login করার পর নিজের নাম লিখবেন। Dashboard-এ Gmail-এর Profile Name দেখানো হবে না।</p>
+  <button class="google" onclick="login()">🔵 Sign in with Google</button>
+</section>
+
+<section id="setup" class="card hidden">
+  <h2>👤 আপনার নাম</h2>
+  <p class="muted">আপনি এখানে যে নাম লিখবেন, Dashboard-এ সেটিই দেখাবে।</p>
+  <label>নাম</label>
+  <input id="name" maxlength="80" placeholder="যেমন: মোঃ আব্দুল করিম">
+  <button class="save" onclick="save()">নাম সংরক্ষণ করুন</button>
+</section>
+
+<main id="app" class="hidden">
+  <section id="dash" class="card">
+    <div class="welcome">স্বাগতম, <span id="showName"></span> 👋</div>
+    <div class="gmail">User Panel</div>
+
+    <div class="deposit-summary">
+      <div class="deposit-stat">
+        <small>💰 মোট জমা</small>
+        <strong>৳ <span id="totalAmount">০</span></strong>
+      </div>
+      <div class="deposit-stat">
+        <small>🧾 মোট জমা সংখ্যা</small>
+        <strong><span id="totalCount">০</span></strong>
+      </div>
+    </div>
+
+    <button class="save" onclick="openDepositForm()">➕ টাকা জমা দিন</button>
+  </section>
+
+  <section id="depositForm" class="money-section hidden">
+    <div class="deposit-form">
+      <h2>💵 টাকা জমা দেওয়ার ফরম</h2>
+
+      <label>১. ক্রমিক</label>
+      <input id="serial" readonly>
+
+      <label>২. সদস্যের ID</label>
+      <input id="memberId" readonly>
+
+      <label>৩. নাম</label>
+      <input id="memberName" readonly>
+
+      <label>৪. জমার তারিখ</label>
+      <input id="depositDate" type="date">
+
+      <label>৫. জমার পরিমাণ (৳)</label>
+      <input id="depositAmount" type="number" min="1" step="1" inputmode="numeric" placeholder="যেমন: ১০০০">
+
+      <label>৬. জমার মাধ্যম</label>
+      <select id="depositMethod">
+        <option value="">মাধ্যম নির্বাচন করুন</option>
+        <option value="বিকাশ">বিকাশ</option>
+        <option value="নগদ">নগদ</option>
+        <option value="রকেট">রকেট</option>
+        <option value="ব্যাংক">ব্যাংক</option>
+        <option value="ক্যাশ">ক্যাশ</option>
+        <option value="অন্যান্য">অন্যান্য</option>
+      </select>
+
+      <button class="deposit-save" onclick="saveDeposit()">💾 জমা সংরক্ষণ করুন</button>
+      <button class="deposit-cancel" onclick="closeDepositForm()">বাতিল</button>
+    </div>
+  </section>
+
+  <section id="depositList" class="money-section hidden">
+    <div class="deposit-list">
+      <h2>📋 আমার জমার তথ্য</h2><p class="muted">প্রতিটি নতুন জমা আগের মোট সঞ্চয়ের সঙ্গে স্বয়ংক্রিয়ভাবে যোগ হয়ে “মোট সঞ্চয়” কলামে দেখাবে।</p>
+      <div id="depositEmpty" class="deposit-empty">এখনও কোনো জমার তথ্য নেই।</div>
+      <div id="depositTableWrap" class="deposit-table-wrap hidden">
+        <table class="deposit-table">
+          <thead>
+            <tr>
+              <th>ক্রমিক</th>
+              <th>সদস্য ID</th>
+              <th>তারিখ</th>
+              <th>পরিমাণ</th>
+              <th>মাধ্যম</th>
+              <th>মোট সঞ্চয়</th>
+            </tr>
+          </thead>
+          <tbody id="depositBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+
+<section id="adminPanel" class="admin-section hidden">
+
+  <div class="admin-head">
+    <div>
+      <h2>⚙️ এডমিন প্যানেল</h2>
+      <p>অ্যাপ ব্যবহারকারী, তাদের Access এবং টাকা জমার হিসাব এখান থেকে নিয়ন্ত্রণ করুন।</p>
+    </div>
+    <div class="admin-badge">ADMIN</div>
+  </div>
+
+  <div class="admin-summary-grid">
+    <div class="admin-summary-card">
+      <span>👥 মোট ইউজার</span>
+      <strong id="adminUserCount">০</strong>
+    </div>
+    <div class="admin-summary-card">
+      <span>🟢 Active ইউজার</span>
+      <strong id="adminActiveCount">০</strong>
+    </div>
+    <div class="admin-summary-card">
+      <span>🔴 Blocked ইউজার</span>
+      <strong id="adminBlockedCount">০</strong>
+    </div>
+    <div class="admin-summary-card">
+      <span>💰 মোট সঞ্চয়</span>
+      <strong>৳ <span id="adminGrandTotal">০</span></strong>
+    </div>
+  </div>
+
+  <div class="admin-card">
+    <div class="admin-card-title">
+      <h3>👥 ইউজার নিয়ন্ত্রণ</h3>
+      <span>Gmail অনুযায়ী Access নিয়ন্ত্রণ করুন</span>
+    </div>
+
+    <div class="admin-grid">
+      <div class="admin-field">
+        <label>Gmail / User ID</label>
+        <input id="adminGmail" type="email" placeholder="user@gmail.com">
+      </div>
+
+      <div class="admin-field">
+        <label>Organization ID</label>
+        <input id="adminOrgId" maxlength="30" placeholder="ORG-001">
+      </div>
+
+      <div class="admin-field">
+        <label>প্রতিষ্ঠানের নাম</label>
+        <input id="adminOrgName" maxlength="100" placeholder="প্রতিষ্ঠানের নাম">
+      </div>
+
+      <div class="admin-field">
+        <label>Access Status</label>
+        <select id="adminActive">
+          <option value="true">🟢 Active</option>
+          <option value="false">🔴 Blocked</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="admin-actions">
+      <button class="admin-primary" onclick="saveAdminAccess()">💾 User সংরক্ষণ</button>
+      <button class="admin-secondary" onclick="clearAdminForm()">✖ পরিষ্কার</button>
+    </div>
+  </div>
+
+  <div class="admin-card">
+    <div class="admin-card-title">
+      <h3>📋 সকল ইউজারের তালিকা</h3>
+      <span>প্রয়োজনে User Block / Unblock / Delete</span>
+    </div>
+
+    <div id="adminAccessEmpty" class="admin-empty">
+      এখনও কোনো User যোগ করা হয়নি।
+    </div>
+
+    <div id="adminAccessWrap" class="admin-table-wrap hidden">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ক্রমিক</th>
+            <th>User ID / Gmail</th>
+            <th>Organization</th>
+            <th>প্রতিষ্ঠান</th>
+            <th>মোট জমা</th>
+            <th>সর্বশেষ জমা</th>
+            <th>Status</th>
+            <th>কাজ</th>
+          </tr>
+        </thead>
+        <tbody id="adminAccessBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="admin-card">
+    <div class="admin-card-title">
+      <h3>📅 মাসভিত্তিক জমার হিসাব</h3>
+      <span>কোন মাসে কত টাকা জমা হয়েছে</span>
+    </div>
+
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>মাস</th>
+            <th>জমার সংখ্যা</th>
+            <th>মোট টাকা</th>
+          </tr>
+        </thead>
+        <tbody id="adminMonthlyBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="admin-card">
+    <div class="admin-card-title">
+      <h3>🧾 নির্বাচিত User-এর জমার বিস্তারিত</h3>
+      <span id="adminSelectedUser">কোনো User নির্বাচন করা হয়নি</span>
+    </div>
+
+    <div id="adminUserDepositEmpty" class="admin-empty">
+      User তালিকা থেকে “বিস্তারিত” চাপলে তার মাসভিত্তিক/জমার তথ্য এখানে দেখা যাবে।
+    </div>
+
+    <div id="adminUserDepositWrap" class="admin-table-wrap hidden">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ক্রমিক</th>
+            <th>তারিখ</th>
+            <th>জমা</th>
+            <th>মাধ্যম</th>
+            <th>মোট সঞ্চয়</th>
+          </tr>
+        </thead>
+        <tbody id="adminUserDepositBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="admin-card admin-danger-card">
+    <div class="admin-card-title">
+      <h3>🗑️ User-এর তথ্য মুছে ফেলা</h3>
+      <span>শুধু প্রয়োজন হলে ব্যবহার করুন</span>
+    </div>
+    <p class="admin-warning">
+      User Delete করলে তার Access এবং এই Local Storage-এ থাকা সংশ্লিষ্ট জমার তথ্য মুছে যাবে।
+    </p>
+    <button class="admin-danger-wide" onclick="deleteSelectedUserData()">🗑️ নির্বাচিত User-এর তথ্য Delete</button>
+  </div>
+
+</section>
+
+</main>
+
+<script type="module" src="js/admin.js"></script>
+</body></html
+
+></html>
