@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Money-Saving — Admin Panel</title>
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+<button id="menuBtn" class="menu-btn hidden" onclick="toggleSidebar()">☰</button>
+<div id="overlay" class="overlay" onclick="closeSidebar()"></div>
+<aside id="sidebar" class="sidebar">
+  <div class="brand">⚙️ Money-Saving</div>
+  <div class="side-user">Admin Panel</div>
+  <button id="sideDash" class="side-link active" onclick="showSection('dash')">🏠 ড্যাশবোর্ড</button>
+  <button id="sideMonthly" class="side-link" onclick="showSection('monthly')">📅 মাসিক হিসাব</button>
+  <button id="sideUsers" class="side-link" onclick="showSection('users')">👥 ইউজারের তালিকা</button>
+  <div class="sidebar-spacer"></div>
+  <button class="side-link side-logout" onclick="logout()">🚪 লগআউট</button>
+</aside>
+
+<header class="top"><h1>💰 Money-Saving</h1><div>Admin Panel — Online</div></header>
+
+<section id="login" class="card login-card">
+  <h2>🔐 Admin Login</h2>
+  <p class="muted">শুধু নির্ধারিত Admin Gmail দিয়ে প্রবেশ করা যাবে।</p>
+  <button class="google" onclick="adminLogin()">🔵 Google দিয়ে Admin Login</button>
+</section>
+
+<main id="app" class="hidden">
+  <section id="dash" class="page-section">
+    <div class="welcome-card"><div class="welcome">Admin Dashboard 👋</div><div class="sub">সিস্টেমের সামগ্রিক হিসাব</div></div>
+    <div class="summary-grid">
+      <div class="summary-card"><small>👥 মোট ইউজার</small><strong id="adminUserCount">০</strong></div>
+      <div class="summary-card"><small>🟢 Active ইউজার</small><strong id="adminActiveCount">০</strong></div>
+      <div class="summary-card"><small>🔴 Blocked ইউজার</small><strong id="adminBlockedCount">০</strong></div>
+      <div class="summary-card"><small>💰 মোট সঞ্চয়</small><strong>৳ <span id="adminGrandTotal">০</span></strong></div>
+    </div>
+    <button class="primary wide" onclick="showSection('users')">👥 ইউজারের তালিকা দেখুন</button>
+  </section>
+
+  <section id="monthly" class="page-section hidden">
+    <div class="panel-card">
+      <h2>📅 মাসিক হিসাব</h2>
+      <p class="muted">প্রতিটি মাসে সকল ইউজার মিলে কত টাকা জমা দিয়েছেন।</p>
+      <div id="monthlyEmpty" class="empty hidden">এখনও কোনো জমার তথ্য নেই।</div>
+      <div id="monthlyWrap" class="table-wrap"><table><thead><tr><th>মাস</th><th>জমার সংখ্যা</th><th>মোট টাকা</th></tr></thead><tbody id="adminMonthlyBody"></tbody></table></div>
+    </div>
+  </section>
+
+  <section id="users" class="page-section hidden">
+    <div class="panel-card">
+      <h2>👥 ইউজারের তালিকা</h2>
+      <p class="muted">Admin এখান থেকে User-এর হিসাব দেখতে এবং Active/Block করতে পারবেন।</p>
+      <div id="usersEmpty" class="empty hidden">এখনও কোনো User নেই।</div>
+      <div id="usersWrap" class="table-wrap"><table><thead><tr><th>ক্রমিক</th><th>নাম</th><th>Member ID</th><th>Gmail</th><th>মোট সঞ্চয়</th><th>Status</th><th>কাজ</th></tr></thead><tbody id="usersBody"></tbody></table></div>
+    </div>
+    <div id="detailCard" class="panel-card hidden">
+      <h2>🧾 User-এর জমার বিস্তারিত</h2>
+      <p id="selectedUser" class="muted">—</p>
+      <div class="table-wrap"><table><thead><tr><th>ক্রমিক</th><th>তারিখ</th><th>জমা</th><th>মাধ্যম</th><th>মোট সঞ্চয়</th></tr></thead><tbody id="detailBody"></tbody></table></div>
+    </div>
+  </section>
+</main>
+<script type="module" src="js/admin.js"></script>
+</body>
+</html>
