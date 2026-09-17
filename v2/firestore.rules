@@ -1,0 +1,40 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function me(uid) { return signedIn() && request.auth.uid == uid; }
+    function admin() {
+      return signedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    match /meta/memberCounter {
+      allow read: if signedIn();
+      allow create: if signedIn() && request.resource.data.next == 2;
+      allow update: if signedIn()
+        && request.resource.data.next == resource.data.next + 1
+        && request.resource.data.keys().hasOnly(['next']);
+      allow delete: if admin();
+    }
+
+    match /users/{uid} {
+      allow read: if me(uid) || admin();
+      allow create: if me(uid)
+        && request.resource.data.role == 'user'
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.memberNo == getAfter(/databases/$(database)/documents/meta/memberCounter).data.next - 1
+        && request.resource.data.memberId == ('6778' + (request.resource.data.memberNo < 10 ? '000' : request.resource.data.memberNo < 100 ? '00' : request.resource.data.memberNo < 1000 ? '0' : '') + string(request.resource.data.memberNo));
+      allow update: if admin()
+        || (me(uid) && request.resource.data.role == resource.data.role && request.resource.data.email == resource.data.email && request.resource.data.memberId == resource.data.memberId);
+      allow delete: if admin();
+
+      match /deposits/{depositId} {
+        allow read: if me(uid) || admin();
+        allow create: if me(uid)
+          && get(/databases/$(database)/documents/users/$(uid)).data.active == true
+          && request.resource.data.memberId == get(/databases/$(database)/documents/users/$(uid)).data.memberId
+          && request.resource.data.name == get(/databases/$(database)/documents/users/$(uid)).data.name;
+        allow update, delete: if admin();
+      }
+    }
+  }
+}
