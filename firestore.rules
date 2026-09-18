@@ -1,0 +1,39 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && request.auth.token.email != null
+        && request.auth.token.email.lower() == 'masumbillah6778@gmail.com';
+    }
+
+    // Each user document is keyed by the Firebase Authentication UID.
+    match /users/{userId} {
+      allow read: if signedIn() && (request.auth.uid == userId || isAdmin());
+      allow create: if signedIn() && request.auth.uid == userId;
+      allow update: if signedIn() && (request.auth.uid == userId || isAdmin());
+      allow delete: if isAdmin();
+
+      match /deposits/{depositId} {
+        allow read: if signedIn() && (request.auth.uid == userId || isAdmin());
+        allow create: if signedIn()
+          && request.auth.uid == userId
+          && request.resource.data.ownerUid == request.auth.uid;
+        allow update: if isAdmin();
+        allow delete: if isAdmin();
+      }
+    }
+
+    // Temporary counter document used to issue 6778xxxx member IDs.
+    // Any signed-in user can read/write this counter in this version.
+    // Admin-only counter management can be added later if needed.
+    match /counters/{counterId} {
+      allow read, write: if signedIn();
+    }
+  }
+}
