@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Money-Saving Apps — User Panel</title>
+<link rel="stylesheet" href="css/user.css">
+</head>
+<body>
+<button id="menuBtn" class="menu-btn hidden" onclick="toggleSidebar()">☰</button>
+<div id="overlay" class="overlay" onclick="closeSidebar()"></div>
+<aside id="sidebar" class="sidebar">
+  <h3>☰ মেনু</h3><div class="side-user">Money-Saving Apps</div>
+  <button id="sideDash" class="side-link active">🏠 ড্যাশবোর্ড</button>
+  <button id="sideForm" class="side-link">➕ টাকা জমার ফরম</button>
+  <button id="sideList" class="side-link">📋 টাকা জমার তালিকা</button>
+  <div style="height:45vh"></div>
+  <button id="logoutBtn" class="side-link side-logout">🚪 লগআউট</button>
+</aside>
+
+<header class="top"><h1>💰 Money-Saving Apps</h1><div>সঞ্চয় ব্যবস্থাপনা</div></header>
+
+<section id="login" class="card">
+  <h2>🔐 Google Login</h2>
+  <p class="muted">Gmail দিয়ে Login করার পর নিজের Display Name লিখবেন।</p>
+  <button id="loginBtn" class="google">🔵 Sign in with Google</button>
+  <div id="loginStatus" class="status-box hidden"></div>
+</section>
+
+<section id="setup" class="card hidden">
+  <h2>👤 আপনার নাম</h2>
+  <p class="muted">আপনি এখানে যে নাম লিখবেন, Dashboard-এ সেটিই দেখাবে। Gmail-এর Profile Name ব্যবহার করা হবে না।</p>
+  <label>নাম</label><input id="name" maxlength="80" placeholder="যেমন: মোঃ আব্দুল করিম">
+  <p class="muted">সদস্য ID: <b id="memberIdSetup"></b></p>
+  <button id="saveNameBtn" class="save">নাম সংরক্ষণ করুন</button>
+</section>
+
+<main id="app" class="hidden">
+<section id="dash" class="card">
+  <div class="welcome">স্বাগতম, <span id="showName"></span> 👋</div>
+  <div class="gmail">Member ID: <span id="memberIdText"></span></div>
+  <input id="memberIdDisplay" type="hidden">
+  <div class="deposit-summary">
+    <div class="deposit-stat"><small>💰 মোট জমা</small><strong>৳ <span id="totalAmount">০</span></strong></div>
+    <div class="deposit-stat"><small>🧾 মোট জমা সংখ্যা</small><strong><span id="totalCount">০</span></strong></div>
+  </div>
+  <button class="save" onclick="showSection('depositForm')">➕ টাকা জমা দিন</button>
+</section>
+
+<section id="depositForm" class="money-section hidden">
+<div class="deposit-form">
+<h2>💵 টাকা জমা দেওয়ার ফরম</h2>
+<label>১. ক্রমিক</label><input id="serial" readonly>
+<label>২. সদস্যের ID</label><input id="memberId" readonly>
+<label>৩. নাম</label><input id="memberName" readonly>
+<label>৪. জমার তারিখ</label><input id="depositDate" type="date">
+<label>৫. জমার পরিমাণ (৳)</label><input id="depositAmount" type="number" min="1" step="1" inputmode="numeric">
+<label>৬. জমার মাধ্যম</label>
+<select id="depositMethod"><option value="">মাধ্যম নির্বাচন করুন</option><option>বিকাশ</option><option>নগদ</option><option>রকেট</option><option>ব্যাংক</option><option>ক্যাশ</option><option>অন্যান্য</option></select>
+<button id="saveDepositBtn" class="save">💾 জমা সংরক্ষণ করুন</button>
+<button class="deposit-cancel" onclick="showSection('dash')">বাতিল</button>
+</div></section>
+
+<section id="depositList" class="money-section hidden">
+<div class="deposit-list">
+<h2>📋 আমার জমার তথ্য</h2><p class="muted">প্রতিটি নতুন জমা আগের হিসাবের সঙ্গে যোগ হয়ে “মোট সঞ্চয়” দেখাবে।</p>
+<div id="depositEmpty" class="empty">এখনও কোনো জমার তথ্য নেই।</div>
+<div id="depositTableWrap" class="deposit-table-wrap hidden">
+<table class="deposit-table"><thead><tr><th>ক্রমিক</th><th>সদস্য ID</th><th>তারিখ</th><th>পরিমাণ</th><th>মাধ্যম</th><th>মোট সঞ্চয়</th></tr></thead>
+<tbody id="depositBody"></tbody></table>
+</div></div></section>
+</main>
+<script type="module" src="js/user.js"></script>
+</body></html>
