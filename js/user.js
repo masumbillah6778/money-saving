@@ -200,7 +200,6 @@ $("saveDepositBtn").addEventListener("click", async () => {
       createdAt: serverTimestamp()
     });
     await loadDeposits();
-    openSection("depositList");
     alert("✅ টাকা জমার তথ্য সংরক্ষণ হয়েছে।");
   } catch (e) {
     console.error(e);
