@@ -24,8 +24,6 @@ function clearError() {
 }
 
 function localMemberId(uid) {
-  // Stable 6778xxxxxx identifier. A secure sequential allocator should be
-  // implemented server-side later; this client-only fallback is collision-resistant.
   let h = 0;
   for (let i = 0; i < uid.length; i++) h = ((h << 5) - h + uid.charCodeAt(i)) | 0;
   h = Math.abs(h);
@@ -70,6 +68,7 @@ function render() {
   deposits.forEach((d, i) => {
     total += Number(d.amount || 0);
     const tr = document.createElement("tr");
+
     [
       bn(i + 1),
       d.memberId || "",
@@ -77,11 +76,12 @@ function render() {
       money(d.amount),
       d.method || "",
       money(total)
-    ].forEach(v => {
+    ].forEach(value => {
       const td = document.createElement("td");
-      td.textContent = v;
+      td.textContent = value;
       tr.appendChild(td);
     });
+
     $("depositBody").appendChild(tr);
   });
 
@@ -94,10 +94,18 @@ function render() {
 function openSection(id) {
   ["dash", "depositForm", "depositList"].forEach(x => $(x).classList.add("hidden"));
   ["sideDash", "sideForm", "sideList"].forEach(x => $(x).classList.remove("active"));
+
   $(id).classList.remove("hidden");
-  const map = {dash:"sideDash", depositForm:"sideForm", depositList:"sideList"};
+
+  const map = {
+    dash: "sideDash",
+    depositForm: "sideForm",
+    depositList: "sideList"
+  };
+
   $(map[id]).classList.add("active");
   closeSidebar();
+
   if (id === "depositForm") prepareForm();
 }
 
@@ -105,7 +113,7 @@ function prepareForm() {
   $("serial").value = deposits.length + 1;
   $("memberId").value = $("memberIdDisplay").value;
   $("memberName").value = $("showName").textContent;
-  $("depositDate").value = new Date().toISOString().slice(0,10);
+  $("depositDate").value = new Date().toISOString().slice(0, 10);
   $("depositAmount").value = "";
   $("depositMethod").value = "";
 }
@@ -113,6 +121,7 @@ function prepareForm() {
 async function afterLogin(user) {
   currentUser = user;
   clearError();
+
   try {
     const profile = await ensureProfile(user);
     $("login").classList.add("hidden");
@@ -140,13 +149,18 @@ async function afterLogin(user) {
 
 $("loginBtn").addEventListener("click", async () => {
   clearError();
+
   try {
     await signInWithPopup(auth, provider);
   } catch (e) {
     console.error(e);
+
     if (e.code === "auth/popup-blocked" || e.code === "auth/popup-cancelled-by-user") {
-      try { await signInWithRedirect(auth, provider); }
-      catch (e2) { showError("Google Login Redirect ব্যর্থ: " + (e2.code || e2.message)); }
+      try {
+        await signInWithRedirect(auth, provider);
+      } catch (e2) {
+        showError("Google Login Redirect ব্যর্থ: " + (e2.code || e2.message));
+      }
     } else {
       showError("Google Login ব্যর্থ: " + (e.code || e.message));
     }
@@ -155,11 +169,14 @@ $("loginBtn").addEventListener("click", async () => {
 
 $("saveNameBtn").addEventListener("click", async () => {
   const name = $("name").value.trim();
+
   if (!name) return alert("দয়া করে আপনার নাম লিখুন।");
+
   try {
     const ref = doc(db, "users", currentUser.uid);
     const snap = await getDoc(ref);
     const memberId = snap.data()?.memberId || localMemberId(currentUser.uid);
+
     await setDoc(ref, {
       uid: currentUser.uid,
       email: currentUser.email.toLowerCase(),
@@ -167,6 +184,7 @@ $("saveNameBtn").addEventListener("click", async () => {
       memberId,
       updatedAt: serverTimestamp()
     }, { merge: true });
+
     $("showName").textContent = name;
     $("memberIdDisplay").value = memberId;
     $("memberIdText").textContent = memberId;
@@ -185,22 +203,31 @@ $("saveDepositBtn").addEventListener("click", async () => {
   const date = $("depositDate").value;
   const amount = Number($("depositAmount").value);
   const method = $("depositMethod").value;
+
   if (!date) return alert("জমার তারিখ নির্বাচন করুন।");
   if (!Number.isFinite(amount) || amount <= 0) return alert("সঠিক জমার পরিমাণ লিখুন।");
   if (!method) return alert("জমার মাধ্যম নির্বাচন করুন।");
 
   try {
     const ref = collection(db, "users", currentUser.uid, "deposits");
+
     await addDoc(ref, {
       uid: currentUser.uid,
       email: currentUser.email.toLowerCase(),
       name: $("showName").textContent,
       memberId: $("memberIdDisplay").value,
-      date, amount, method,
+      date,
+      amount,
+      method,
       createdAt: serverTimestamp()
     });
+
     await loadDeposits();
-    alert("✅ টাকা জমার তথ্য সংরক্ষণ হয়েছে।");
+
+    // Save-এর পর তালিকায় যাবে না; নতুন এন্ট্রির জন্য form reset হবে।
+    prepareForm();
+
+    alert("✅ টাকা জমার তথ্য সংরক্ষণ হয়েছে.");
   } catch (e) {
     console.error(e);
     showError("টাকা জমা সংরক্ষণ করা যায়নি: " + (e.code || e.message));
@@ -208,17 +235,24 @@ $("saveDepositBtn").addEventListener("click", async () => {
 });
 
 $("logoutBtn").addEventListener("click", async () => {
-  await signOut(auth);
+  try {
+    await signOut(auth);
+  } catch (e) {
+    console.error(e);
+    showError("Logout ব্যর্থ: " + (e.code || e.message));
+  }
 });
 
 window.toggleSidebar = () => {
   $("sidebar").classList.toggle("open");
   $("overlay").classList.toggle("show");
 };
+
 window.closeSidebar = () => {
   $("sidebar").classList.remove("open");
   $("overlay").classList.remove("show");
 };
+
 window.showSection = openSection;
 
 $("sideDash").onclick = () => openSection("dash");
