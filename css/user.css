@@ -46,3 +46,16 @@ button{width:100%;padding:13px;border:0;border-radius:12px;margin-top:15px;font-
 #loginStatus{padding:12px;margin-top:12px;border-radius:10px;font-size:14px;color:#b91c1c;background:#fef2f2;border:1px solid #fecaca}
 @media(max-width:600px){.top{padding-left:72px;padding-right:18px}.card{margin:20px 14px;padding:20px}.money-section{padding:0 12px}}
 @media(max-width:420px){.deposit-summary,.summary-grid{grid-template-columns:1fr}.top h1{font-size:22px}.welcome{font-size:20px}}
+
+.brand{font-size:21px;font-weight:800;color:#0f766e;margin:0 8px 5px}
+.welcome-card{background:#fff;border-radius:20px;padding:22px;box-shadow:0 10px 30px #00000010;margin-bottom:18px}
+.sub{margin-top:7px;color:#64748b;font-size:14px}
+.wide{width:100%}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:10px 7px;border-bottom:1px solid #e2e8f0;text-align:left;white-space:nowrap}
+th{background:#f8fafc}
+.empty{text-align:center;color:#64748b;padding:20px}
+.page-section{max-width:720px;margin:18px auto;padding:0 18px}
+main{padding-bottom:35px}
+.settings-card{max-width:720px;margin:auto}
