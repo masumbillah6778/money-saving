@@ -99,10 +99,11 @@ function openSection(id) {
   const map = {
     dash: "sideDash",
     depositForm: "sideForm",
-    depositList: "sideList"
+    depositList: "sideList",
+    settings: "sideSettings"
   };
 
-  $(map[id]).classList.add("active");
+  if (map[id] && $(map[id])) $(map[id]).classList.add("active");
   closeSidebar();
 
   if (id === "depositForm") prepareForm();
@@ -134,6 +135,10 @@ async function afterLogin(user) {
       $("showName").textContent = profile.displayName;
       $("memberIdDisplay").value = profile.memberId;
       $("memberIdText").textContent = profile.memberId;
+      if ($("sideUserName")) $("sideUserName").textContent = profile.displayName;
+      if ($("settingsName")) $("settingsName").textContent = profile.displayName;
+      if ($("settingsEmail")) $("settingsEmail").textContent = user.email || "—";
+      if ($("settingsMemberId")) $("settingsMemberId").textContent = profile.memberId;
       $("setup").classList.add("hidden");
       $("app").classList.remove("hidden");
       $("menuBtn").classList.remove("hidden");
@@ -190,6 +195,10 @@ async function saveName() {
     $("showName").textContent = name;
     $("memberIdDisplay").value = memberId;
     $("memberIdText").textContent = memberId;
+    if ($("sideUserName")) $("sideUserName").textContent = name;
+    if ($("settingsName")) $("settingsName").textContent = name;
+    if ($("settingsEmail")) $("settingsEmail").textContent = currentUser.email || "—";
+    if ($("settingsMemberId")) $("settingsMemberId").textContent = memberId;
     $("setup").classList.add("hidden");
     $("app").classList.remove("hidden");
     $("menuBtn").classList.remove("hidden");
@@ -245,6 +254,14 @@ if ($("saveDepositBtn")) $("saveDepositBtn").addEventListener("click", saveDepos
 async function logout() {
   try {
     await signOut(auth);
+    currentUser = null;
+    deposits = [];
+    $("app").classList.add("hidden");
+    $("setup").classList.add("hidden");
+    $("login").classList.remove("hidden");
+    $("menuBtn").classList.add("hidden");
+    closeSidebar();
+    clearError();
   } catch (e) {
     console.error(e);
     showError("Logout ব্যর্থ: " + (e.code || e.message));
