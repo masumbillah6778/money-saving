@@ -74,8 +74,7 @@ function render() {
       d.memberId || "",
       d.date || "",
       money(d.amount),
-      d.method || "",
-      money(total)
+      d.method || ""
     ].forEach(value => {
       const td = document.createElement("td");
       td.textContent = value;
@@ -92,8 +91,8 @@ function render() {
 }
 
 function openSection(id) {
-  ["dash", "depositForm", "depositList"].forEach(x => $(x).classList.add("hidden"));
-  ["sideDash", "sideForm", "sideList"].forEach(x => $(x).classList.remove("active"));
+  ["dash", "depositForm", "depositList", "settings"].forEach(x => $(x).classList.add("hidden"));
+  ["sideDash", "sideForm", "sideList", "sideSettings"].forEach(x => $(x).classList.remove("active"));
 
   $(id).classList.remove("hidden");
 
@@ -147,7 +146,7 @@ async function afterLogin(user) {
   }
 }
 
-$("loginBtn").addEventListener("click", async () => {
+async function login() {
   clearError();
 
   try {
@@ -165,9 +164,12 @@ $("loginBtn").addEventListener("click", async () => {
       showError("Google Login ব্যর্থ: " + (e.code || e.message));
     }
   }
-});
+}
 
-$("saveNameBtn").addEventListener("click", async () => {
+if ($("loginBtn")) $("loginBtn").addEventListener("click", login);
+
+
+async function saveName() {
   const name = $("name").value.trim();
 
   if (!name) return alert("দয়া করে আপনার নাম লিখুন।");
@@ -197,9 +199,12 @@ $("saveNameBtn").addEventListener("click", async () => {
     console.error(e);
     showError("নাম সংরক্ষণ করা যায়নি: " + (e.code || e.message));
   }
-});
+}
 
-$("saveDepositBtn").addEventListener("click", async () => {
+if ($("saveNameBtn")) $("saveNameBtn").addEventListener("click", saveName);
+
+
+async function saveDeposit() {
   const date = $("depositDate").value;
   const amount = Number($("depositAmount").value);
   const method = $("depositMethod").value;
@@ -232,16 +237,22 @@ $("saveDepositBtn").addEventListener("click", async () => {
     console.error(e);
     showError("টাকা জমা সংরক্ষণ করা যায়নি: " + (e.code || e.message));
   }
-});
+}
 
-$("logoutBtn").addEventListener("click", async () => {
+if ($("saveDepositBtn")) $("saveDepositBtn").addEventListener("click", saveDeposit);
+
+
+async function logout() {
   try {
     await signOut(auth);
   } catch (e) {
     console.error(e);
     showError("Logout ব্যর্থ: " + (e.code || e.message));
   }
-});
+}
+
+if ($("logoutBtn")) $("logoutBtn").addEventListener("click", logout);
+
 
 window.toggleSidebar = () => {
   $("sidebar").classList.toggle("open");
@@ -258,6 +269,18 @@ window.showSection = openSection;
 $("sideDash").onclick = () => openSection("dash");
 $("sideForm").onclick = () => openSection("depositForm");
 $("sideList").onclick = () => openSection("depositList");
+
+
+window.login = login;
+window.saveName = saveName;
+window.saveDeposit = saveDeposit;
+window.logout = logout;
+window.showSection = openSection;
+
+if ($("sideDash")) $("sideDash").onclick = () => openSection("dash");
+if ($("sideForm")) $("sideForm").onclick = () => openSection("depositForm");
+if ($("sideList")) $("sideList").onclick = () => openSection("depositList");
+if ($("sideSettings")) $("sideSettings").onclick = () => openSection("settings");
 
 onAuthStateChanged(auth, async user => {
   if (user) await afterLogin(user);
