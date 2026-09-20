@@ -1,0 +1,122 @@
+*{box-sizing:border-box}body{margin:0;background:#f1f5f9;color:#0f172a;font-family:Arial,"Noto Sans Bengali",sans-serif}.hidden{display:none!important}.top{padding:20px 24px;text-align:center;color:#fff;background:linear-gradient(135deg,#0f766e,#0f172a)}.top h1{margin:0 0 5px}.card{max-width:480px;margin:30px auto;padding:26px;background:#fff;border-radius:20px;box-shadow:0 10px 30px #0001}.muted{color:#64748b;line-height:1.6}.google,.primary,.side-link{cursor:pointer}.google{width:100%;padding:13px;border:1px solid #cbd5e1;background:#fff;border-radius:12px;font-size:16px;font-weight:bold}.menu-btn{position:fixed;top:14px;left:14px;z-index:1002;width:48px;height:48px;padding:0;border:0;border-radius:14px;background:#fff;color:#0f766e;box-shadow:0 8px 24px #0002;font-size:25px}.sidebar{position:fixed;top:0;left:-285px;width:270px;height:100vh;z-index:1001;background:#fff;box-shadow:8px 0 30px #0002;padding:76px 16px 20px;transition:left .25s;overflow-y:auto}.sidebar.open{left:0}.brand{font-size:20px;font-weight:800;color:#0f766e;margin:0 8px 5px}.side-user{margin:0 8px 18px;color:#64748b;font-size:13px}.side-link{display:block;width:100%;margin:7px 0;padding:13px 15px;text-align:left;background:#f1f5f9;color:#0f172a;border:1px solid #e2e8f0;border-radius:12px;font-size:14px;text-decoration:none}.side-link.active{background:#ecfdf5;color:#047857;border-color:#a7f3d0}.side-logout{background:#fee2e2;color:#991b1b;border-color:#fecaca}.file-btn input{display:none}.sidebar-spacer{height:12px}.overlay{position:fixed;inset:0;background:#0005;z-index:1000;display:none}.overlay.show{display:block}.page-section{max-width:1150px;margin:20px auto;padding:0 18px 30px}.welcome-card,.panel-card{background:#fff;border-radius:20px;padding:20px;margin-bottom:18px;box-shadow:0 10px 30px #00000010}.welcome{font-size:24px;font-weight:800}.sub{color:#64748b;margin-top:6px}.summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.summary-card{background:#fff;border-radius:18px;padding:20px;box-shadow:0 10px 30px #00000010}.summary-card small{color:#64748b}.summary-card strong{display:block;font-size:25px;margin-top:8px}.search{width:100%;max-width:480px;padding:12px;border:1px solid #cbd5e1;border-radius:11px;font-size:15px;margin:5px 0 12px}.table-wrap{overflow-x:auto}.table-wrap table{width:100%;border-collapse:collapse;min-width:760px}.table-wrap th,.table-wrap td{padding:10px 8px;border-bottom:1px solid #e2e8f0;text-align:left;white-space:nowrap;font-size:13px}.table-wrap th{background:#f8fafc}.small-btn{border:0;border-radius:8px;padding:7px 9px;margin:2px;background:#eef2ff;cursor:pointer;font-size:12px}.empty{text-align:center;padding:25px;color:#64748b}.detail-total{padding:12px;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:12px;margin:10px 0 15px}.modal{display:none;position:fixed;inset:0;background:#0006;z-index:2000;align-items:center;justify-content:center;padding:15px}.modal.show{display:flex}.modal-box{width:100%;max-width:520px;background:#fff;border-radius:18px;padding:20px}.modal-head{display:flex;justify-content:space-between;align-items:center}.close{border:0;border-radius:50%;width:36px;height:36px;cursor:pointer}.modal-box label{display:block;font-weight:700;margin:12px 0 5px}.modal-box input,.modal-box select{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px;font-size:15px}.primary{background:#0f766e;color:#fff;border:0;padding:13px;border-radius:11px;font-weight:700}.wide{width:100%;margin-top:15px}@media(max-width:800px){.summary-grid{grid-template-columns:1fr 1fr}}@media(max-width:600px){.top{padding-left:75px}.summary-grid{grid-template-columns:1fr}.page-section{padding:0 12px}.panel-card{padding:15px}}@media print{.sidebar,.menu-btn,.overlay,.top,#login{display:none!important}.page-section{max-width:none}.panel-card{box-shadow:none}.page-section.hidden{display:none!important}#printTitle{display:block!important;font-size:22px;font-weight:bold;margin:15px}body{background:#fff}}#printTitle{display:none}
+
+
+/* Selected User detail view */
+.detail-head{display:flex;align-items:center;justify-content:space-between;gap:15px}
+.detail-identity{font-size:20px;font-weight:800;line-height:1.7;color:#0f172a}
+@media print{
+  body *{visibility:hidden!important}
+  #detailCard,#detailCard *{visibility:visible!important}
+  #detailCard{
+    display:block!important;position:absolute!important;left:0!important;top:0!important;
+    width:100%!important;margin:0!important;padding:0!important;box-shadow:none!important;
+  }
+  #detailPrintBtn{display:none!important}
+  #detailCard .detail-head{margin-bottom:12px}
+  #detailCard .detail-identity{font-size:21px!important;font-weight:800!important}
+  #detailCard .table-wrap{overflow:visible!important}
+  #detailCard table{width:100%!important;border-collapse:collapse!important}
+  #detailCard thead{display:table-header-group!important}
+  #detailCard tr{break-inside:avoid!important;page-break-inside:avoid!important}
+  #detailCard th,#detailCard td{border:1px solid #333!important;padding:7px!important}
+  @page{margin:12mm}
+}
+
+
+/* Section print controls */
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:8px}
+.section-head h2{margin:0}
+.section-print-btn{white-space:nowrap}
+@media(max-width:600px){
+  .section-head{align-items:flex-start}
+  .section-print-btn{padding:10px 12px}
+}
+
+/* Monthly / User-list print views */
+@media print{
+  body *{visibility:hidden!important}
+  #monthly:not(.hidden),
+  #monthly:not(.hidden) *{visibility:visible!important}
+  #users:not(.hidden) #userListCard,
+  #users:not(.hidden) #userListCard *{visibility:visible!important}
+
+  #monthly:not(.hidden){
+    position:absolute!important;left:0!important;top:0!important;width:100%!important;
+  }
+  #users:not(.hidden) #userListCard{
+    position:absolute!important;left:0!important;top:0!important;width:100%!important;
+  }
+
+  .section-print-btn,
+  #usersTable .actions-col,
+  #usersTable td:last-child,
+  #detailCard,
+  #userSearch,
+  #usersWrap + *{display:none!important}
+
+  #monthly .panel-card,
+  #userListCard{
+    box-shadow:none!important;
+    margin:0!important;
+    padding:0!important;
+  }
+
+  #monthly .section-head h2,
+  #userListCard .section-head h2{
+    font-size:24px!important;
+    font-weight:800!important;
+    margin:0 0 14px!important;
+  }
+
+  #monthlyTable,
+  #usersTable{
+    width:100%!important;
+    border-collapse:collapse!important;
+    min-width:0!important;
+  }
+  #monthlyTable thead,
+  #usersTable thead{display:table-header-group!important}
+  #monthlyTable th,#monthlyTable td,
+  #usersTable th,#usersTable td{
+    border:1px solid #333!important;
+    padding:9px 8px!important;
+    white-space:normal!important;
+    font-size:14px!important;
+  }
+  #monthlyTable th,#usersTable th{
+    font-weight:800!important;
+    background:#f8fafc!important;
+  }
+  #monthlyTable td:first-child{
+    font-size:17px!important;
+    font-weight:800!important;
+  }
+  #usersTable td:nth-child(1),
+  #usersTable td:nth-child(2),
+  #usersTable td:nth-child(3){
+    font-weight:800!important;
+  }
+  #monthlyTable tr,#usersTable tr{
+    break-inside:avoid!important;
+    page-break-inside:avoid!important;
+  }
+  @page{margin:12mm}
+}
+
+
+.print-heading{display:none}
+.danger-btn{background:#fee2e2!important;color:#991b1b!important}
+@media print{
+  .print-heading{display:block!important;text-align:center!important;margin:0 0 14px!important}
+  .print-main-title{font-size:25px!important;font-weight:900!important;line-height:1.25!important}
+  .print-month{font-size:21px!important;font-weight:800!important;margin-top:4px!important}
+  #adminHelp{display:none!important}
+  #detailCard .detail-total{display:none!important}
+  #detailCard .detail-head h2{display:none!important}
+  #detailCard .detail-identity{margin-bottom:14px!important}
+  #detailCard .deposit-actions-col,#detailCard tbody .deposit-actions-col{display:none!important}
+  #monthlyPrintHeading,#userListPrintHeading{display:block!important}
+  #monthly .section-head h2,#userListCard .section-head h2{display:none!important}
+  #monthlyTable thead,#usersTable thead,#detailCard table thead{display:table-header-group!important}
+  #monthlyTable tr,#usersTable tr,#detailCard tr{break-inside:avoid!important;page-break-inside:avoid!important}
+}
